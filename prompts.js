@@ -1,21 +1,28 @@
+// TODO: Keywords are to broad and vague. Need to be more specific. Need to directly relate to gift.
+const numberPerRequest = 3;
+
 export const initialContextPrompt = "" +
     "You are a gift idea generator. All your responses will only contain information about relevant gifts for target recipients. Do not include anything in your responses other than JSON data. Each message sent to you will contain information about a target recipient. You will return JSON information with a list of objects that would be good gifts for this recipient. The gifts you suggest should not be direct results of their interests and should be unique suggestions. The details about the recipient should only slightly affect your suggestions. They provide details about who the person is, not exactly what would make a good gift. Your response should follow this format:\n" +
-    "        [\n" +
+    "      {\n" +
+    "        “conversation_title”: “A very short, concise title describing the request”," +
+    "        “gifts”: [\n" +
     "            {\n" +
     "               “name”: “gift’s name”,\n" +
     "               “description”: “1-2 sentence description”,\n"+
     "               “gift_topic”: “one or two word broad category”,\n" +
-    "               “keywords”: “1-5 keywords separated by commas”,\n" +
-    "               “price”: “estimated price of project (e.g. 10.00)”,\n" +
+    "               “keywords”: “1-3 broad but distinctive keywords separated by commas”,\n" +
+    // "               “price”: “estimated price of project (e.g. 10.00)”,\n" +
     // "               “match”: “estimated quality based off recipient (e.g., 50.0%)”\n" +
     // It gave, which is interesting: "match": " eighty eight .0%\t"\n
     "           }\n" +
-    "       ]\n";
+    "       ]\n" +
+    "    }\n";
 
 export const generateInitialPrompt = (data) => {
     const { name, age, gender, relationship, lowerBudgetRange, upperBudgetRange, occasion, interests, disinterests, preferences, openEndedAddition } = data;
 
-    let prompt = "Generate a list of 6 gifts based on the following characteristics: \n";
+    let prompt = `Generate a list of ${numberPerRequest} gifts based on the following characteristics: 
+`;
     if (relationship)
         prompt += `The person I'm getting the gift for is my ${relationship}. `
 
@@ -65,6 +72,34 @@ export const generateInitialPrompt = (data) => {
 
     if(openEndedAddition)
         prompt += ` ${openEndedAddition}.`
+
+    return prompt;
+}
+
+export const generateFollowUpPrompt = (data) => {
+    const { thumbsUpCategories, thumbsDownCategories } = data;
+
+    let prompt = `Good start! I want ${numberPerRequest} more gift ideas based of the following feedback: \n`;
+
+    for(let i = 0; i < thumbsUpCategories.length; i++) {
+        if(i === 0)
+            prompt += `The suggestions about ${thumbsUpCategories[i]}, `;
+        else if (i === thumbsUpCategories.length - 1)
+            prompt += ` and ${thumbsUpCategories[i]} were good! Try more like that.`;
+        else
+            prompt += `${thumbsUpCategories[i]}, `;
+    }
+
+    for(let i = 0; i < thumbsDownCategories.length; i++) {
+        if(i === 0)
+            prompt += `The suggestions about ${thumbsDownCategories[i]}, `;
+        else if (i === thumbsDownCategories.length - 1)
+            prompt += ` and ${thumbsDownCategories[i]} were not as good. Try to avoid those.`;
+        else
+            prompt += `${thumbsDownCategories[i]}, `;
+    }
+
+    prompt += 'Do your best to generate good gifts even if the feedback isn\'t great.';
 
     return prompt;
 }
