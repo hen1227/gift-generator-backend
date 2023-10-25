@@ -1,5 +1,5 @@
 // TODO: Keywords are to broad and vague. Need to be more specific. Need to directly relate to gift.
-const numberPerRequest = 3;
+const numberPerRequest = 6;
 
 export const initialContextPrompt = "" +
     "You are a gift idea generator. All your responses will only contain information about relevant gifts for target recipients. Do not include anything in your responses other than JSON data. Each message sent to you will contain information about a target recipient. You will return JSON information with a list of objects that would be good gifts for this recipient. The gifts you suggest should not be direct results of their interests and should be unique suggestions. The details about the recipient should only slightly affect your suggestions. They provide details about who the person is, not exactly what would make a good gift. Your response should follow this format:\n" +
@@ -8,12 +8,12 @@ export const initialContextPrompt = "" +
     "        “gifts”: [\n" +
     "            {\n" +
     "               “name”: “gift’s name”,\n" +
-    "               “description”: “1-2 sentence description”,\n"+
+    // "               “description”: “1-2 sentence description”,\n"+
     "               “gift_topic”: “one or two word broad category”,\n" +
-    "               “keywords”: “1-3 broad but distinctive keywords separated by commas”,\n" +
+    "               “keywords”: “1-3 distinctive keywords separated by commas”,\n" +
     // "               “price”: “estimated price of project (e.g. 10.00)”,\n" +
     // "               “match”: “estimated quality based off recipient (e.g., 50.0%)”\n" +
-    // It gave, which is interesting: "match": " eighty eight .0%\t"\n
+    // ERROR with matching: It gave, which is interesting: "match": " eighty eight .0%\t"\n
     "           }\n" +
     "       ]\n" +
     "    }\n";
@@ -100,6 +100,18 @@ export const generateFollowUpPrompt = (data) => {
     }
 
     prompt += 'Do your best to generate good gifts even if the feedback isn\'t great.';
+    // prompt += 'You must maintain the format of your response';
+
+    return prompt;
+}
+
+
+export const generateExpandUponPrompt = (data) => {
+    const { expandingGiftTopic } = data;
+
+    let prompt = `Good start! I want ${numberPerRequest} more gift ideas relating to ${expandingGiftTopic}! Please list more ideas like this one. \n`;
+    prompt += 'Do your best to generate good gifts even if its hard to find related gifts';
+    // prompt += 'You must maintain the format of your response';
 
     return prompt;
 }

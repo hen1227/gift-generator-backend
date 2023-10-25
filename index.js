@@ -6,6 +6,7 @@ import {OpenAI} from "openai";
 import 'dotenv/config';
 
 const app = express();
+const port = process.env.PORT || 4002;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -18,7 +19,7 @@ const openai = new OpenAI({
 });
 
 
-app.post('/api/sendInitialMessage', async (req, res) => {
+app.post('/sendInitialMessage', async (req, res) => {
     console.log(req.body.data);
 
     const context = initialContextPrompt;
@@ -50,11 +51,9 @@ app.post('/api/sendInitialMessage', async (req, res) => {
 });
 
 
-app.post('/api/sendFollowUpMessage', async (req, res) => {
+app.post('/sendFollowUpMessage', async (req, res) => {
     const data = req.body.data;
 
-    console.log(data);
-    console.log(data.previousPrompts[0]);
     try {
 
         const initialPrompt = data.previousPrompts[0].promptInfo;
@@ -97,7 +96,7 @@ app.post('/api/sendFollowUpMessage', async (req, res) => {
         const completion = await openai.chat.completions.create({
             messages: messages,
             model: 'gpt-3.5-turbo',
-            temperature: 1.15 // TODO: Test this to find best value, it is the level of creativity 0-2
+            temperature: 1.0 // TODO: Test this to find best value, it is the level of creativity 0-2
         });
 
         console.log(completion.choices[0])
@@ -115,6 +114,6 @@ app.post('/api/sendFollowUpMessage', async (req, res) => {
     }
 });
 
-app.listen(3001, () => {
-    console.log('Example app listening on port 3001!');
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}!`);
 });
