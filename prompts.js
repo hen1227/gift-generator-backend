@@ -99,6 +99,7 @@ export const generateFollowUpPrompt = (data) => {
             prompt += `${thumbsDownCategories[i]}, `;
     }
 
+    prompt += 'This feedback should help you peice together what sort of person I\'m searching for a gift for. Given this feedback, generate more gifts that they might also be interested in. ';
     prompt += 'Do your best to generate good gifts even if the feedback isn\'t great.';
     // prompt += 'You must maintain the format of your response';
 
