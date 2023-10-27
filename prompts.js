@@ -79,6 +79,9 @@ export const generateInitialPrompt = (data) => {
 export const generateFollowUpPrompt = (data) => {
     const { thumbsUpCategories, thumbsDownCategories } = data;
 
+    if(thumbsUpCategories.length === 0 && thumbsDownCategories.length === 0)
+        return `Good start! I want about ${numberPerRequest} more gift ideas that this person might enjoy. \n`;
+
     let prompt = `Good start! I want ${numberPerRequest} more gift ideas based of the following feedback: \n`;
 
     for(let i = 0; i < thumbsUpCategories.length; i++) {
