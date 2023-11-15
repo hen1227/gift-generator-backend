@@ -26,7 +26,7 @@ export const initialContextPrompt = "" +
     "    }\n";
 
 export const generateInitialPrompt = (data) => {
-    const { name, age, gender, relationship, lowerBudgetRange, upperBudgetRange, occasion, interests, disinterests, preferences, openEndedAddition } = data;
+    const { age, gender, relationship, lowerBudgetRange, upperBudgetRange, occasion, interests, disinterests, preferences, openEndedAddition } = data;
 
     let prompt = `Generate a list of ${numberPerRequest} gifts based on the following characteristics: 
 `;
